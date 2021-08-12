@@ -1,6 +1,18 @@
 #!/bin/bash
+###############################################################################
+# gen-mount-win.sh
+#
+# Reads the unraid config and create a Windows Batch Script to mount all
+# user shares
+#
+# Before the first usage:
+# - Read the script and make sure you understand what id does.
+#   Never execute code you don't fully understand on your machine!
+# - After that, replace the server and username variables with the server name
+#   or IP and the user to create the script for
+#
+###############################################################################
 
-# Edit this vars specific for your system
 server=
 username=
 
