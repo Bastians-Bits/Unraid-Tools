@@ -1,0 +1,2 @@
+## generator_mac.sh
+Generates a new script to mount all available shares for the user in Mac OS X. The _servers name/address_, _ssh account name_ and _unraid username_ have to be set in the beginning. At runtime the script will ask for the ssh password to read the configuration from the server. It will also ask for the unraid user password to bake it into the script, this is optional.
