@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# Change this variable to N to actual delete templates
+DRYRUN=Y
+# Path to the user templates
+TEMPLATE_PATH=/boot/config/plugins/dockerMan/templates-user
+# Keeps an index of repositories and their respective templates
+declare -A index
+
+## Load all template and their repositories and index them
+printf "Existing templates with repository\n"
+for template in $(ls $TEMPLATE_PATH -I "*.bak"); do
+   printf "Template: %s\n" $template
+   repository=$(grep -oP '(?<=Repository>).*?(?=</Repository>)' $TEMPLATE_PATH/$template)
+   printf "Repository: %s\n" $repository
+   printf "\n"
+   index[$repository]=$template
+done
+
+echo "----------------"
+echo ""
+
+## Check all running container and remove them from the index
+printf "Running repositories\n"
+for repository in $(docker ps -a --format "{{.Image}}"); do
+   printf "Repository: %s\n" $repository
+   unset index[$repository]
+done
+
+echo "----------------"
+echo ""
+
+## Check the index for unused templates
+printf "Templates without container\n"
+for repository in "${!index[@]}"; do
+   if [ $DRYRUN == "N" ]; then
+      rm --verbose $TEMPLATE_PATH/${index[$repository]}
+      if [ -f $TEMPLATE_PATH/${index[$repository]}.bak ]; then
+         rm --verbose $TEMPLATE_PATH/${index[$repository]}.bak
+      fi
+   else
+      printf "Would delete: %s\n" $TEMPLATE_PATH/${index[$repository]}
+      if [ -f $TEMPLATE_PATH/${index[$repository]}.bak ]; then
+         printf "Would delete: %s\n" $TEMPLATE_PATH/${index[$repository]}.bak
+      fi
+   fi
+done
+
+echo "----------------"
+echo ""
+
+## Check the folder for backups without a template
+printf "Template Backups without template\n"
+for backup in $(ls $TEMPLATE_PATH/*.bak); do
+   if [ ! -f ${backup%.bak} ]; then
+      if [ $DRYRUN == "N" ]; then
+         rm --verbose $backup
+      else
+         printf "Would delete: %s\n" $backup
+      fi
+   fi
+done
