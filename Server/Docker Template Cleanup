@@ -1,11 +1,23 @@
-#!/bin/bash
+#name=Docker Template Cleanup
+#description=Clean up unused docker templates
+#arrayStarted=false
+#argumentDescription=Dryrun? (Y/N)
+#argumentDefault=Y
 
 # Change this variable to N to actual delete templates
-DRYRUN=Y
+DRYRUN=${1:Y}
 # Path to the user templates
 TEMPLATE_PATH=/boot/config/plugins/dockerMan/templates-user
 # Keeps an index of repositories and their respective templates
 declare -A index
+
+echo "----------------"
+echo ""
+
+printf "Dryrun set to %s\n" $DRYRUN
+
+echo "----------------"
+echo ""
 
 ## Load all template and their repositories and index them
 printf "Existing templates with repository\n"
