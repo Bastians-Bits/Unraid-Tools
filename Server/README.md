@@ -1,2 +1,0 @@
-## generator_windows.sh
-This scripts generates a batch script to mount all available share for a user. The variables _server_ and _username_ have to be filled in the beginning of the script. The password will be asked at runtime and stored within the script.
